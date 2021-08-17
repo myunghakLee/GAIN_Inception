@@ -283,17 +283,22 @@ class GAIN_BERT(nn.Module):
 #         )for i in range(1, self.num_split + 1)]
 
 
+
+        first_bank = self.bank_size //2 
+        second_bank = self.bank_size //2 
+    
+
         self.predict1 = nn.Sequential(
-                    nn.Linear(self.bank_size * 5//2 + self.gcn_dim * 4, self.bank_size * 2//2),
+                    nn.Linear(first_bank * 5 + self.gcn_dim * 4, first_bank * 2),
                     self.activation,
                     self.dropout,
-                    nn.Linear(self.bank_size * 2//2, config.relation_nums),
+                    nn.Linear(first_bank * 2, config.relation_nums),
                 )
         self.predict2 = nn.Sequential(
-                    nn.Linear(self.bank_size * 5 + self.gcn_dim * 4, self.bank_size * 2),
+                    nn.Linear(second_bank * 5 + self.gcn_dim * 4, second_bank * 2),
                     self.activation,
                     self.dropout,
-                    nn.Linear(self.bank_size * 2, config.relation_nums),
+                    nn.Linear(second_bank * 2, config.relation_nums),
                 )
 
         self.edge_layer = RelEdgeLayer(node_feat=self.gcn_dim, edge_feat=self.gcn_dim,
@@ -310,8 +315,8 @@ class GAIN_BERT(nn.Module):
 
 #         self.attention = [Attention(self.bank_size * 2//self.num_split*i, self.gcn_dim * 4) for i in range(1, self.num_split + 1)]
 
-        self.attention1 = Attention(self.bank_size * 2//self.num_split*1, self.gcn_dim * 4)
-        self.attention2 = Attention(self.bank_size * 2//self.num_split*2, self.gcn_dim * 4)
+        self.attention1 = Attention(first_bank * 2, self.gcn_dim * 4)
+        self.attention2 = Attention(second_bank * 2, self.gcn_dim * 4)
         
         
 #         self.attention = [Attention(self.bank_size * 2, self.gcn_dim * 4) for i in range(1, self.num_split + 1)]
@@ -391,8 +396,9 @@ class GAIN_BERT(nn.Module):
         
         predict = []
         for jj in range(1, self.num_split + 1):
-            predict.append(self.Inception_module(graphs, output_feature[:, :len(output_feature[0])// self.num_split * jj], params, bsz, jj-1))
-#             predict.append(self.Inception_module(graphs, output_feature, params, bsz))
+            start_idx = len(output_feature[0])// self.num_split * (jj-1)
+            end_idx = len(output_feature[0])// self.num_split * jj
+            predict.append(self.Inception_module(graphs, output_feature[:, start_idx:end_idx], params, bsz, jj-1))
         
         return predict
         
