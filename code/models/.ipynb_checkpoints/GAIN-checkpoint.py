@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import dgl
 import dgl.nn.pytorch as dglnn
 import numpy as np
@@ -224,7 +225,6 @@ class GAIN_GloVe(nn.Module):
                 self.path_info_mapping(path_info)
             )
         )
-
         predictions = self.predict(torch.cat(
             (h_entity, t_entity, torch.abs(h_entity - t_entity), torch.mul(h_entity, t_entity), global_info, path_info),
             dim=-1))
@@ -235,6 +235,7 @@ class GAIN_GloVe(nn.Module):
 class GAIN_BERT(nn.Module):
     def __init__(self, config):
         super(GAIN_BERT, self).__init__()
+        
         self.config = config
         if config.activation == 'tanh':
             self.activation = nn.Tanh()
@@ -269,8 +270,9 @@ class GAIN_BERT(nn.Module):
 
         
         self.num_gcn_layers = config.gcn_layers
-        self.num_split = 2
-        
+        self.num_split = self.num_gcn_layers//2
+        assert self.num_gcn_layers % self.num_split == 0, "num_gcn_layers or num_split is wrong"
+
 #         for i in range(1, self.num_split + 1):
 #             print(self.bank_size * 5 + self.gcn_dim * 4/self.num_split*i, self.bank_size * 2/self.num_split*i)
 #             print(self.bank_size * 2/self.num_split*i, config.relation_nums)
@@ -283,38 +285,61 @@ class GAIN_BERT(nn.Module):
 #         )for i in range(1, self.num_split + 1)]
 
 
-        self.predict1 = nn.Sequential(
-                    nn.Linear(self.bank_size * 5//2 + self.gcn_dim * 4, self.bank_size * 2//2),
-                    self.activation,
-                    self.dropout,
-                    nn.Linear(self.bank_size * 2//2, config.relation_nums),
-                )
-        self.predict2 = nn.Sequential(
-                    nn.Linear(self.bank_size * 5 + self.gcn_dim * 4, self.bank_size * 2),
-                    self.activation,
-                    self.dropout,
-                    nn.Linear(self.bank_size * 2, config.relation_nums),
-                )
 
-        self.edge_layer = RelEdgeLayer(node_feat=self.gcn_dim, edge_feat=self.gcn_dim,
-                                       activation=self.activation, dropout=config.dropout)
-
+#         first_bank = self.bank_size //(self.num_gcn_layers//2)
+#         second_bank = self.bank_size //(self.num_gcn_layers//2)
+        self.subnet_size = 3 # subnet에 gcn 몇개가 포함될지
+        subnet_bank_size = self.gcn_dim * (self.subnet_size)
+        print("subnet_bank_size: ", subnet_bank_size)
+        print("self.bank_size: ", self.bank_size)
+        print("self.num_gcn_layers: ", self.num_gcn_layers)
+#         exit(True)
+#         self.predict1 = nn.Sequential(
+#                     nn.Linear(subnet_bank_size * 5 + self.gcn_dim * 4, subnet_bank_size * 2),
+#                     self.activation,
+#                     self.dropout,
+#                     nn.Linear(subnet_bank_size * 2, config.relation_nums),
+#                 )
         
         
-        assert self.num_gcn_layers % self.num_split == 0, "num_gcn_layers or num_split is wrong"
+#         self.predict2 = nn.Sequential(
+#                     nn.Linear(subnet_bank_size * 5 + self.gcn_dim * 4, subnet_bank_size * 2),
+#                     self.activation,
+#                     self.dropout,
+#                     nn.Linear(subnet_bank_size * 2, config.relation_nums),
+#                 )
+
+        self.predict = nn.ModuleList([nn.Sequential(
+                    nn.Linear(subnet_bank_size * 5 + self.gcn_dim * 4, subnet_bank_size * 2),
+                    self.activation,
+                    self.dropout,
+                    nn.Linear(subnet_bank_size * 2, config.relation_nums),
+        ) for i in range(self.num_split)])
+
+        self.edge_layer = nn.ModuleList([RelEdgeLayer(node_feat=self.gcn_dim, edge_feat=self.gcn_dim,
+                                       activation=self.activation, dropout=config.dropout) for i in range(self.num_split)])
+
+        self.path_info_mapping = nn.ModuleList([nn.Linear(self.gcn_dim * 4, self.gcn_dim * 4) for i in range(self.num_split)])
+        self.attention = nn.ModuleList([Attention(subnet_bank_size * 2, self.gcn_dim * 4) for i in range(self.num_split)])
+        
+        
         
 #         self.path_info_mapping = [nn.Linear(self.gcn_dim * 4//self.num_split*i, self.gcn_dim * 4//self.num_split*i) for i in range(1, self.num_split + 1)]
 #         self.path_info_mapping = [nn.Linear(self.gcn_dim * 4, self.gcn_dim * 4) for i in range(1, self.num_split + 1)]
-        self.path_info_mapping1 = nn.Linear(self.gcn_dim * 4, self.gcn_dim * 4)
-        self.path_info_mapping2 = nn.Linear(self.gcn_dim * 4, self.gcn_dim * 4)
+        
+#         self.path_info_mapping1 = nn.Linear(self.gcn_dim * 4, self.gcn_dim * 4)
+#         self.path_info_mapping2 = nn.Linear(self.gcn_dim * 4, self.gcn_dim * 4)
+        
+        
 
 #         self.attention = [Attention(self.bank_size * 2//self.num_split*i, self.gcn_dim * 4) for i in range(1, self.num_split + 1)]
 
-        self.attention1 = Attention(self.bank_size * 2//self.num_split*1, self.gcn_dim * 4)
-        self.attention2 = Attention(self.bank_size * 2//self.num_split*2, self.gcn_dim * 4)
+#         self.attention1 = Attention(first_bank * 2, self.gcn_dim * 4)
+#         self.attention2 = Attention(second_bank * 2, self.gcn_dim * 4)
         
+#         self.attention = [Attention(self.bank_size * 2//self.num_split*i, self.gcn_dim * 4) for i in range(1, self.num_split + 1)]
         
-#         self.attention = [Attention(self.bank_size * 2, self.gcn_dim * 4) for i in range(1, self.num_split + 1)]
+                                               
 #         print(self.attention)
 #         print("="*100)
 #         print(self.path_info_mapping)
@@ -332,10 +357,15 @@ class GAIN_BERT(nn.Module):
         h_t_pairs: [batch_size, h_t_limit, 2]
         ht_pair_distance: [batch_size, h_t_limit]
         '''
+        
+#         print(self.attention)
+#         print("="*100)
+#         print(self.path_info_mapping)
+        
         words = params['words']
         mask = params['mask']
         bsz, slen = words.size()
-
+        
         encoder_outputs, sentence_cls = self.bert(input_ids=words, attention_mask=mask)
         # encoder_outputs[mask == 0] = 0
 
@@ -374,14 +404,14 @@ class GAIN_BERT(nn.Module):
                 features = x
             else:
                 features = torch.cat((features, x), dim=0)
+        device = features.get_device()
 
-        graph_big = dgl.batch_hetero(graphs)
+        graph_big = dgl.batch_hetero(graphs).to(device)
         output_features = [features]
 
         for GCN_layer in self.GCN_layers:
             features = GCN_layer(graph_big, {"node": features})["node"]  # [total_mention_nums, gcn_dim]
             output_features.append(features)
-
         output_feature = torch.cat(output_features, dim=-1)
 
         graphs = dgl.unbatch_hetero(graph_big)
@@ -390,10 +420,19 @@ class GAIN_BERT(nn.Module):
         
         
         predict = []
-        for jj in range(1, self.num_split + 1):
-            predict.append(self.Inception_module(graphs, output_feature[:, :len(output_feature[0])// self.num_split * jj], params, bsz, jj-1))
-#             predict.append(self.Inception_module(graphs, output_feature, params, bsz))
-        
+#         print(output_feature.shape)
+        idx = 0
+        for jj in range(0,self.num_gcn_layers,self.subnet_size-1): # 0, N, 2
+            start_idx = len(output_feature[0])// self.num_split * (jj-1)# 0
+            end_idx = len(output_feature[0])// self.num_split * jj      # 2020
+
+            start_idx = self.gcn_dim * jj                       #0      808*2
+            end_idx = self.gcn_dim * (jj + self.subnet_size)    #808*3  808*5
+#             print(jj)
+#             print(output_feature[:, start_idx:end_idx].shape)
+            predict.append(self.Inception_module(graphs, output_feature[:, start_idx:end_idx], params, bsz, idx))
+            idx+=1
+#             print("="*100)
         return predict
         
     def Inception_module(self, graphs, output_feature, params, bsz, idx):
@@ -442,8 +481,8 @@ class GAIN_BERT(nn.Module):
         global_info = global_info.unsqueeze(1).expand(-1, h_t_limit, -1)
 
         entity_graphs = params['entity_graphs']
-        entity_graph_big = dgl.batch(entity_graphs)
-        self.edge_layer(entity_graph_big, entity_graph_feature)
+        entity_graph_big = dgl.batch(entity_graphs).to(entity_graph_feature.get_device())
+        self.edge_layer[idx](entity_graph_big, entity_graph_feature)
 
         entity_graphs = dgl.unbatch(entity_graph_big)
         path_info = get_cuda(torch.zeros((bsz, h_t_limit, self.gcn_dim * 4)))
@@ -493,40 +532,58 @@ class GAIN_BERT(nn.Module):
 
                 tmp_path_info = torch.cat((forward_first, forward_second, backward_first, backward_second), dim=-1)
 #                 print(self.attention[idx])
-                if idx == 0:
-                    _, attn_value = self.attention1(torch.cat((h_entity[i, j], t_entity[i, j]), dim=-1), tmp_path_info)
-                else:
-                    _, attn_value = self.attention2(torch.cat((h_entity[i, j], t_entity[i, j]), dim=-1), tmp_path_info)
+
+    
+                _, attn_value = self.attention[idx](torch.cat((h_entity[i, j], t_entity[i, j]), dim=-1), tmp_path_info)
+
+
+#                 if idx == 0:
+#                     _, attn_value = self.attention1(torch.cat((h_entity[i, j], t_entity[i, j]), dim=-1), tmp_path_info)
+#                 else:
+#                     _, attn_value = self.attention2(torch.cat((h_entity[i, j], t_entity[i, j]), dim=-1), tmp_path_info)
                 path_info[i, j] = attn_value
 
             entity_graphs[i].edata.pop('h')
         
-        if idx == 0:
-#             print(path_info.shape)
-#             print(path_info.shape)
-            path_info = self.dropout(
-                self.activation(
-                    self.path_info_mapping1(path_info)
-                )
-            )
-        else:
-            path_info = self.dropout(
-                self.activation(
-                    self.path_info_mapping2(path_info)
-                )
-            )
+        
 
-        if idx == 0:
+        path_info = self.dropout(
+            self.activation(
+                self.path_info_mapping[idx](path_info)
+            )
+        )
+        
+        
+#         if idx == 0:
+# #             print(path_info.shape)
+# #             print(path_info.shape)
+#             path_info = self.dropout(
+#                 self.activation(
+#                     self.path_info_mapping1(path_info)
+#                 )
+#             )
+#         else:
+#             path_info = self.dropout(
+#                 self.activation(
+#                     self.path_info_mapping2(path_info)
+#                 )
+#             )
+        predictions = self.predict[idx](torch.cat(
+            (h_entity, t_entity, torch.abs(h_entity - t_entity), torch.mul(h_entity, t_entity), global_info, path_info),
+            dim=-1))
+
+#         if idx == 0:
             
-            predictions = self.predict1(torch.cat(
-                (h_entity, t_entity, torch.abs(h_entity - t_entity), torch.mul(h_entity, t_entity), global_info, path_info),
-                dim=-1))
-        else:
-            predictions = self.predict2(torch.cat(
-                (h_entity, t_entity, torch.abs(h_entity - t_entity), torch.mul(h_entity, t_entity), global_info, path_info),
-                dim=-1))
+#             predictions = self.predict1(torch.cat(
+#                 (h_entity, t_entity, torch.abs(h_entity - t_entity), torch.mul(h_entity, t_entity), global_info, path_info),
+#                 dim=-1))
+#         else:
+#             predictions = self.predict2(torch.cat(
+#                 (h_entity, t_entity, torch.abs(h_entity - t_entity), torch.mul(h_entity, t_entity), global_info, path_info),
+#                 dim=-1))
             
         # predictions = self.predict(torch.cat((h_entity, t_entity, torch.abs(h_entity-t_entity), torch.mul(h_entity, t_entity), global_info), dim=-1))
+
         return predictions
 
 
@@ -682,7 +739,9 @@ class RelGraphConvLayer(nn.Module):
         dict[str, torch.Tensor]
             New node features for each node type.
         """
+        device = inputs['node'].get_device()
         g = g.local_var()
+        g = g.to(device)
         if self.use_weight:
             weight = self.basis() if self.use_basis else self.weight
             wdict = {self.rel_names[i]: {'weight': w.squeeze(0)}

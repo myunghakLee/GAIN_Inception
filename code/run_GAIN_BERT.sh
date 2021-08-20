@@ -5,8 +5,12 @@ export CUDA_VISIBLE_DEVICES=$1
 # batch_size= 1 # 5
 # test_batch_size= 1 #16
 
+# +
+MODEL_NAME=$2
+GCN_layer=$3
+
 if true; then
-  model_name=GAIN_BERT_base
+  model_name=$MODEL_NAME
   lr=0.001
   batch_size=5
   test_batch_size=16
@@ -15,6 +19,11 @@ if true; then
   log_step=20
   save_model_freq=3
   negativa_alpha=4
+
+  printf "device: "${CUDA_VISIBLE_DEVICES}
+  printf "\nModel_Name: "${MODEL_NAME}
+  printf "\nGCN_layer: "${GCN_layer}
+  printf "\n"$
 
   nohup python3 -u train.py \
     --train_set ../data/train_annotated.json \
@@ -34,7 +43,7 @@ if true; then
     --save_model_freq ${save_model_freq} \
     --negativa_alpha ${negativa_alpha} \
     --gcn_dim 808 \
-    --gcn_layers 4 \
+    --gcn_layers ${GCN_layer} \
     --bert_hid_size 768 \
     --bert_path ../PLM/bert-base-uncased \
     --use_entity_type \
@@ -44,6 +53,7 @@ if true; then
     --coslr \
     >logs/train_${model_name}.log 2>&1 &
 fi
+# -
 
 # -------------------GAIN_BERT_large Training Shell Script--------------------
 
