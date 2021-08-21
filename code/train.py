@@ -139,21 +139,30 @@ def train(opt):
                                 )
             
             
-            if len(predictions)>1:
-                loss = torch.sum(BCE(predictions[0], relation_multi_label) * relation_mask.unsqueeze(2)) / (
-                        opt.relation_nums * torch.sum(relation_mask)) / len(predictions) * 0.3
+#             if len(predictions)>1:
+#                 loss = torch.sum(BCE(predictions[0], relation_multi_label) * relation_mask.unsqueeze(2)) / (
+#                         opt.relation_nums * torch.sum(relation_mask)) / len(predictions) * 0.3
                 
-            else:
-                loss = torch.sum(BCE(predictions[0], relation_multi_label) * relation_mask.unsqueeze(2)) / (
-                        opt.relation_nums * torch.sum(relation_mask)) / len(predictions)
-                
-            for jj in range(1, len(predictions)):
-                if jj < len(predictions) - 1:
-                    loss += torch.sum(BCE(predictions[jj], relation_multi_label) * relation_mask.unsqueeze(2)) / (
-                            opt.relation_nums * torch.sum(relation_mask)) / len(predictions) * 0.3
-                else:
-                    loss += torch.sum(BCE(predictions[jj], relation_multi_label) * relation_mask.unsqueeze(2)) / (
-                            opt.relation_nums * torch.sum(relation_mask)) / len(predictions)
+#             else:
+#                 loss = torch.sum(BCE(predictions[0], relation_multi_label) * relation_mask.unsqueeze(2)) / (
+#                         opt.relation_nums * torch.sum(relation_mask)) / len(predictions)
+
+            loss = 0
+            for jj in range(0, len(predictions)-1):
+                loss += torch.sum(BCE(predictions[jj], relation_multi_label) * relation_mask.unsqueeze(2)) / (
+                        opt.relation_nums * torch.sum(relation_mask)) / len(predictions) * opt.subnetwork_loss_scale
+
+            loss = torch.sum(BCE(predictions[-1], relation_multi_label) * relation_mask.unsqueeze(2)) / (
+                    opt.relation_nums * torch.sum(relation_mask)) / len(predictions)
+
+
+#             for jj in range(1, len(predictions)):
+#                 if jj < len(predictions) - 1:
+#                     loss += torch.sum(BCE(predictions[jj], relation_multi_label) * relation_mask.unsqueeze(2)) / (
+#                             opt.relation_nums * torch.sum(relation_mask)) / len(predictions) * 0.3
+#                 else:
+#                     loss += torch.sum(BCE(predictions[jj], relation_multi_label) * relation_mask.unsqueeze(2)) / (
+#                             opt.relation_nums * torch.sum(relation_mask)) / len(predictions)
 
             optimizer.zero_grad()
             loss.backward()

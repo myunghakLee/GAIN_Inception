@@ -99,5 +99,8 @@ def get_opt():
 
     # binary classification threshold, automatically find optimal threshold when -1
     parser.add_argument('--input_theta', type=float, default=-1)
+    
+    #MY OPTION
+    parser.add_argument('--subnetwork_loss_scale', type=float, default=0.3)
 
     return parser.parse_args()

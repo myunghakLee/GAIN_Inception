@@ -8,6 +8,7 @@ export CUDA_VISIBLE_DEVICES=$1
 # +
 MODEL_NAME=$2
 GCN_layer=$3
+SUBNETWORK_LOSS_SCALE=$4
 
 if true; then
   model_name=$MODEL_NAME
@@ -51,6 +52,7 @@ if true; then
     --dropout 0.6 \
     --activation relu \
     --coslr \
+    --subnetwork_loss_scale ${SUBNETWORK_LOSS_SCALE} \
     >logs/train_${model_name}.log 2>&1 &
 fi
 # -
