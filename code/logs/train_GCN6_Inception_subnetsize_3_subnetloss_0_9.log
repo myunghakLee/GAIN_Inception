@@ -533,3 +533,5 @@ total parameters: 432135662
 2021-08-23 06:34:17.187271 | epoch  2 | step  760 |  ms/b 1864.95 | train loss 5.312 | NA acc: 1.00 | not NA acc: 0.01  | tot acc: 0.80 
 2021-08-23 06:34:53.972806 | epoch  2 | step  780 |  ms/b 1839.27 | train loss 4.951 | NA acc: 1.00 | not NA acc: 0.02  | tot acc: 0.80 
 2021-08-23 06:35:27.651199 | epoch  2 | step  800 |  ms/b 1683.91 | train loss 5.116 | NA acc: 0.99 | not NA acc: 0.02  | tot acc: 0.80 
+2021-08-23 06:36:09.575154 | epoch  2 | step  820 |  ms/b 2096.19 | train loss 5.163 | NA acc: 0.99 | not NA acc: 0.02  | tot acc: 0.80 
+2021-08-23 06:36:48.515630 | epoch  2 | step  840 |  ms/b 1947.02 | train loss 5.203 | NA acc: 0.99 | not NA acc: 0.02  | tot acc: 0.80 
