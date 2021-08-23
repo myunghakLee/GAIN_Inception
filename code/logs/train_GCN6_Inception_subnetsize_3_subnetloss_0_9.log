@@ -513,3 +513,13 @@ total parameters: 432135662
 2021-08-23 06:21:56.772061 | epoch  1 | step  360 |  ms/b 1922.80 | train loss 5.895 | NA acc: 1.00 | not NA acc: 0.00  | tot acc: 0.80 
 2021-08-23 06:22:32.747201 | epoch  1 | step  380 |  ms/b 1798.75 | train loss 6.157 | NA acc: 1.00 | not NA acc: 0.00  | tot acc: 0.80 
 2021-08-23 06:23:09.302038 | epoch  1 | step  400 |  ms/b 1827.74 | train loss 5.940 | NA acc: 1.00 | not NA acc: 0.00  | tot acc: 0.80 
+2021-08-23 06:23:46.213197 | epoch  1 | step  420 |  ms/b 1845.55 | train loss 5.742 | NA acc: 1.00 | not NA acc: 0.00  | tot acc: 0.80 
+2021-08-23 06:24:25.129481 | epoch  1 | step  440 |  ms/b 1945.81 | train loss 5.637 | NA acc: 1.00 | not NA acc: 0.00  | tot acc: 0.80 
+2021-08-23 06:25:02.398699 | epoch  1 | step  460 |  ms/b 1863.45 | train loss 5.852 | NA acc: 1.00 | not NA acc: 0.00  | tot acc: 0.80 
+2021-08-23 06:25:48.157397 | epoch  1 | step  480 |  ms/b 2287.93 | train loss 5.757 | NA acc: 1.00 | not NA acc: 0.00  | tot acc: 0.80 
+2021-08-23 06:26:27.037611 | epoch  1 | step  500 |  ms/b 1944.00 | train loss 5.416 | NA acc: 1.00 | not NA acc: 0.00  | tot acc: 0.80 
+2021-08-23 06:27:06.147020 | epoch  1 | step  520 |  ms/b 1955.46 | train loss 5.410 | NA acc: 1.00 | not NA acc: 0.00  | tot acc: 0.80 
+2021-08-23 06:27:40.318423 | epoch  1 | step  540 |  ms/b 1708.56 | train loss 5.352 | NA acc: 1.00 | not NA acc: 0.00  | tot acc: 0.80 
+2021-08-23 06:28:14.625215 | epoch  1 | step  560 |  ms/b 1715.33 | train loss 5.501 | NA acc: 1.00 | not NA acc: 0.00  | tot acc: 0.80 
+2021-08-23 06:28:54.249449 | epoch  1 | step  580 |  ms/b 1981.21 | train loss 5.629 | NA acc: 1.00 | not NA acc: 0.00  | tot acc: 0.80 
+2021-08-23 06:29:30.001602 | epoch  1 | step  600 |  ms/b 1787.60 | train loss 5.592 | NA acc: 1.00 | not NA acc: 0.00  | tot acc: 0.80 
