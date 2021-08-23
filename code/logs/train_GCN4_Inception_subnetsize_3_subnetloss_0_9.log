@@ -1,0 +1,459 @@
+Using backend: pytorch
+processId: 6136
+prarent processId: 1
+{
+    "train_set": "../data/train_annotated.json",
+    "dev_set": "../data/dev.json",
+    "test_set": "../data/test.json",
+    "train_set_save": "../data/prepro_data/train_BERT.pkl",
+    "dev_set_save": "../data/prepro_data/dev_BERT.pkl",
+    "test_set_save": "../data/prepro_data/test_BERT.pkl",
+    "checkpoint_dir": "checkpoint",
+    "fig_result_dir": "fig_result",
+    "model_name": "GCN4_Inception_subnetsize_3_subnetloss_0_9",
+    "pretrain_model": "",
+    "vocabulary_size": 200000,
+    "relation_nums": 97,
+    "entity_type_num": 7,
+    "max_entity_num": 80,
+    "word_pad": 0,
+    "entity_type_pad": 0,
+    "entity_id_pad": 0,
+    "word_emb_size": 10,
+    "pre_train_word": false,
+    "data_word_vec": null,
+    "finetune_word": false,
+    "use_entity_type": true,
+    "entity_type_size": 20,
+    "use_entity_id": true,
+    "entity_id_size": 20,
+    "nlayers": 1,
+    "lstm_hidden_size": 32,
+    "lstm_dropout": 0.1,
+    "lr": 0.001,
+    "batch_size": 5,
+    "test_batch_size": 16,
+    "epoch": 300,
+    "test_epoch": 5,
+    "weight_decay": 0.0001,
+    "negativa_alpha": 4.0,
+    "log_step": 20,
+    "save_model_freq": 3,
+    "mention_drop": false,
+    "gcn_layers": 4,
+    "gcn_dim": 808,
+    "dropout": 0.6,
+    "activation": "relu",
+    "bert_hid_size": 768,
+    "bert_path": "../PLM/bert-base-uncased",
+    "bert_fix": false,
+    "coslr": true,
+    "clip": -1,
+    "k_fold": "none",
+    "use_model": "bert",
+    "input_theta": -1,
+    "subnetwork_loss_scale": 0.9
+}
+Reading data from ../data/train_annotated.json.
+load preprocessed data from ../data/prepro_data/train_BERT.pkl.
+Reading data from ../data/dev.json.
+load preprocessed data from ../data/prepro_data/dev_BERT.pkl.
+subnet_bank_size:  2424
+self.bank_size:  4040
+self.num_gcn_layers:  4
+<bound method Module.parameters of GAIN_BERT(
+  (activation): ReLU()
+  (entity_type_emb): Embedding(7, 20, padding_idx=0)
+  (entity_id_emb): Embedding(81, 20, padding_idx=0)
+  (bert): BertModel(
+    (embeddings): BertEmbeddings(
+      (word_embeddings): Embedding(30522, 768, padding_idx=0)
+      (position_embeddings): Embedding(512, 768)
+      (token_type_embeddings): Embedding(2, 768)
+      (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+      (dropout): Dropout(p=0.1, inplace=False)
+    )
+    (encoder): BertEncoder(
+      (layer): ModuleList(
+        (0): BertLayer(
+          (attention): BertAttention(
+            (self): BertSelfAttention(
+              (query): Linear(in_features=768, out_features=768, bias=True)
+              (key): Linear(in_features=768, out_features=768, bias=True)
+              (value): Linear(in_features=768, out_features=768, bias=True)
+              (dropout): Dropout(p=0.1, inplace=False)
+            )
+            (output): BertSelfOutput(
+              (dense): Linear(in_features=768, out_features=768, bias=True)
+              (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+              (dropout): Dropout(p=0.1, inplace=False)
+            )
+          )
+          (intermediate): BertIntermediate(
+            (dense): Linear(in_features=768, out_features=3072, bias=True)
+          )
+          (output): BertOutput(
+            (dense): Linear(in_features=3072, out_features=768, bias=True)
+            (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+            (dropout): Dropout(p=0.1, inplace=False)
+          )
+        )
+        (1): BertLayer(
+          (attention): BertAttention(
+            (self): BertSelfAttention(
+              (query): Linear(in_features=768, out_features=768, bias=True)
+              (key): Linear(in_features=768, out_features=768, bias=True)
+              (value): Linear(in_features=768, out_features=768, bias=True)
+              (dropout): Dropout(p=0.1, inplace=False)
+            )
+            (output): BertSelfOutput(
+              (dense): Linear(in_features=768, out_features=768, bias=True)
+              (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+              (dropout): Dropout(p=0.1, inplace=False)
+            )
+          )
+          (intermediate): BertIntermediate(
+            (dense): Linear(in_features=768, out_features=3072, bias=True)
+          )
+          (output): BertOutput(
+            (dense): Linear(in_features=3072, out_features=768, bias=True)
+            (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+            (dropout): Dropout(p=0.1, inplace=False)
+          )
+        )
+        (2): BertLayer(
+          (attention): BertAttention(
+            (self): BertSelfAttention(
+              (query): Linear(in_features=768, out_features=768, bias=True)
+              (key): Linear(in_features=768, out_features=768, bias=True)
+              (value): Linear(in_features=768, out_features=768, bias=True)
+              (dropout): Dropout(p=0.1, inplace=False)
+            )
+            (output): BertSelfOutput(
+              (dense): Linear(in_features=768, out_features=768, bias=True)
+              (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+              (dropout): Dropout(p=0.1, inplace=False)
+            )
+          )
+          (intermediate): BertIntermediate(
+            (dense): Linear(in_features=768, out_features=3072, bias=True)
+          )
+          (output): BertOutput(
+            (dense): Linear(in_features=3072, out_features=768, bias=True)
+            (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+            (dropout): Dropout(p=0.1, inplace=False)
+          )
+        )
+        (3): BertLayer(
+          (attention): BertAttention(
+            (self): BertSelfAttention(
+              (query): Linear(in_features=768, out_features=768, bias=True)
+              (key): Linear(in_features=768, out_features=768, bias=True)
+              (value): Linear(in_features=768, out_features=768, bias=True)
+              (dropout): Dropout(p=0.1, inplace=False)
+            )
+            (output): BertSelfOutput(
+              (dense): Linear(in_features=768, out_features=768, bias=True)
+              (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+              (dropout): Dropout(p=0.1, inplace=False)
+            )
+          )
+          (intermediate): BertIntermediate(
+            (dense): Linear(in_features=768, out_features=3072, bias=True)
+          )
+          (output): BertOutput(
+            (dense): Linear(in_features=3072, out_features=768, bias=True)
+            (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+            (dropout): Dropout(p=0.1, inplace=False)
+          )
+        )
+        (4): BertLayer(
+          (attention): BertAttention(
+            (self): BertSelfAttention(
+              (query): Linear(in_features=768, out_features=768, bias=True)
+              (key): Linear(in_features=768, out_features=768, bias=True)
+              (value): Linear(in_features=768, out_features=768, bias=True)
+              (dropout): Dropout(p=0.1, inplace=False)
+            )
+            (output): BertSelfOutput(
+              (dense): Linear(in_features=768, out_features=768, bias=True)
+              (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+              (dropout): Dropout(p=0.1, inplace=False)
+            )
+          )
+          (intermediate): BertIntermediate(
+            (dense): Linear(in_features=768, out_features=3072, bias=True)
+          )
+          (output): BertOutput(
+            (dense): Linear(in_features=3072, out_features=768, bias=True)
+            (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+            (dropout): Dropout(p=0.1, inplace=False)
+          )
+        )
+        (5): BertLayer(
+          (attention): BertAttention(
+            (self): BertSelfAttention(
+              (query): Linear(in_features=768, out_features=768, bias=True)
+              (key): Linear(in_features=768, out_features=768, bias=True)
+              (value): Linear(in_features=768, out_features=768, bias=True)
+              (dropout): Dropout(p=0.1, inplace=False)
+            )
+            (output): BertSelfOutput(
+              (dense): Linear(in_features=768, out_features=768, bias=True)
+              (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+              (dropout): Dropout(p=0.1, inplace=False)
+            )
+          )
+          (intermediate): BertIntermediate(
+            (dense): Linear(in_features=768, out_features=3072, bias=True)
+          )
+          (output): BertOutput(
+            (dense): Linear(in_features=3072, out_features=768, bias=True)
+            (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+            (dropout): Dropout(p=0.1, inplace=False)
+          )
+        )
+        (6): BertLayer(
+          (attention): BertAttention(
+            (self): BertSelfAttention(
+              (query): Linear(in_features=768, out_features=768, bias=True)
+              (key): Linear(in_features=768, out_features=768, bias=True)
+              (value): Linear(in_features=768, out_features=768, bias=True)
+              (dropout): Dropout(p=0.1, inplace=False)
+            )
+            (output): BertSelfOutput(
+              (dense): Linear(in_features=768, out_features=768, bias=True)
+              (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+              (dropout): Dropout(p=0.1, inplace=False)
+            )
+          )
+          (intermediate): BertIntermediate(
+            (dense): Linear(in_features=768, out_features=3072, bias=True)
+          )
+          (output): BertOutput(
+            (dense): Linear(in_features=3072, out_features=768, bias=True)
+            (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+            (dropout): Dropout(p=0.1, inplace=False)
+          )
+        )
+        (7): BertLayer(
+          (attention): BertAttention(
+            (self): BertSelfAttention(
+              (query): Linear(in_features=768, out_features=768, bias=True)
+              (key): Linear(in_features=768, out_features=768, bias=True)
+              (value): Linear(in_features=768, out_features=768, bias=True)
+              (dropout): Dropout(p=0.1, inplace=False)
+            )
+            (output): BertSelfOutput(
+              (dense): Linear(in_features=768, out_features=768, bias=True)
+              (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+              (dropout): Dropout(p=0.1, inplace=False)
+            )
+          )
+          (intermediate): BertIntermediate(
+            (dense): Linear(in_features=768, out_features=3072, bias=True)
+          )
+          (output): BertOutput(
+            (dense): Linear(in_features=3072, out_features=768, bias=True)
+            (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+            (dropout): Dropout(p=0.1, inplace=False)
+          )
+        )
+        (8): BertLayer(
+          (attention): BertAttention(
+            (self): BertSelfAttention(
+              (query): Linear(in_features=768, out_features=768, bias=True)
+              (key): Linear(in_features=768, out_features=768, bias=True)
+              (value): Linear(in_features=768, out_features=768, bias=True)
+              (dropout): Dropout(p=0.1, inplace=False)
+            )
+            (output): BertSelfOutput(
+              (dense): Linear(in_features=768, out_features=768, bias=True)
+              (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+              (dropout): Dropout(p=0.1, inplace=False)
+            )
+          )
+          (intermediate): BertIntermediate(
+            (dense): Linear(in_features=768, out_features=3072, bias=True)
+          )
+          (output): BertOutput(
+            (dense): Linear(in_features=3072, out_features=768, bias=True)
+            (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+            (dropout): Dropout(p=0.1, inplace=False)
+          )
+        )
+        (9): BertLayer(
+          (attention): BertAttention(
+            (self): BertSelfAttention(
+              (query): Linear(in_features=768, out_features=768, bias=True)
+              (key): Linear(in_features=768, out_features=768, bias=True)
+              (value): Linear(in_features=768, out_features=768, bias=True)
+              (dropout): Dropout(p=0.1, inplace=False)
+            )
+            (output): BertSelfOutput(
+              (dense): Linear(in_features=768, out_features=768, bias=True)
+              (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+              (dropout): Dropout(p=0.1, inplace=False)
+            )
+          )
+          (intermediate): BertIntermediate(
+            (dense): Linear(in_features=768, out_features=3072, bias=True)
+          )
+          (output): BertOutput(
+            (dense): Linear(in_features=3072, out_features=768, bias=True)
+            (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+            (dropout): Dropout(p=0.1, inplace=False)
+          )
+        )
+        (10): BertLayer(
+          (attention): BertAttention(
+            (self): BertSelfAttention(
+              (query): Linear(in_features=768, out_features=768, bias=True)
+              (key): Linear(in_features=768, out_features=768, bias=True)
+              (value): Linear(in_features=768, out_features=768, bias=True)
+              (dropout): Dropout(p=0.1, inplace=False)
+            )
+            (output): BertSelfOutput(
+              (dense): Linear(in_features=768, out_features=768, bias=True)
+              (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+              (dropout): Dropout(p=0.1, inplace=False)
+            )
+          )
+          (intermediate): BertIntermediate(
+            (dense): Linear(in_features=768, out_features=3072, bias=True)
+          )
+          (output): BertOutput(
+            (dense): Linear(in_features=3072, out_features=768, bias=True)
+            (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+            (dropout): Dropout(p=0.1, inplace=False)
+          )
+        )
+        (11): BertLayer(
+          (attention): BertAttention(
+            (self): BertSelfAttention(
+              (query): Linear(in_features=768, out_features=768, bias=True)
+              (key): Linear(in_features=768, out_features=768, bias=True)
+              (value): Linear(in_features=768, out_features=768, bias=True)
+              (dropout): Dropout(p=0.1, inplace=False)
+            )
+            (output): BertSelfOutput(
+              (dense): Linear(in_features=768, out_features=768, bias=True)
+              (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+              (dropout): Dropout(p=0.1, inplace=False)
+            )
+          )
+          (intermediate): BertIntermediate(
+            (dense): Linear(in_features=768, out_features=3072, bias=True)
+          )
+          (output): BertOutput(
+            (dense): Linear(in_features=3072, out_features=768, bias=True)
+            (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+            (dropout): Dropout(p=0.1, inplace=False)
+          )
+        )
+      )
+    )
+    (pooler): BertPooler(
+      (dense): Linear(in_features=768, out_features=768, bias=True)
+      (activation): Tanh()
+    )
+  )
+  (GCN_layers): ModuleList(
+    (0): RelGraphConvLayer(
+      (activation): ReLU()
+      (conv): HeteroGraphConv(
+        (mods): ModuleDict(
+          (intra): GraphConv(in=808, out=808, normalization=right, activation=None)
+          (inter): GraphConv(in=808, out=808, normalization=right, activation=None)
+          (global): GraphConv(in=808, out=808, normalization=right, activation=None)
+        )
+      )
+      (dropout): Dropout(p=0.6, inplace=False)
+    )
+    (1): RelGraphConvLayer(
+      (activation): ReLU()
+      (conv): HeteroGraphConv(
+        (mods): ModuleDict(
+          (intra): GraphConv(in=808, out=808, normalization=right, activation=None)
+          (inter): GraphConv(in=808, out=808, normalization=right, activation=None)
+          (global): GraphConv(in=808, out=808, normalization=right, activation=None)
+        )
+      )
+      (dropout): Dropout(p=0.6, inplace=False)
+    )
+    (2): RelGraphConvLayer(
+      (activation): ReLU()
+      (conv): HeteroGraphConv(
+        (mods): ModuleDict(
+          (intra): GraphConv(in=808, out=808, normalization=right, activation=None)
+          (inter): GraphConv(in=808, out=808, normalization=right, activation=None)
+          (global): GraphConv(in=808, out=808, normalization=right, activation=None)
+        )
+      )
+      (dropout): Dropout(p=0.6, inplace=False)
+    )
+    (3): RelGraphConvLayer(
+      (activation): ReLU()
+      (conv): HeteroGraphConv(
+        (mods): ModuleDict(
+          (intra): GraphConv(in=808, out=808, normalization=right, activation=None)
+          (inter): GraphConv(in=808, out=808, normalization=right, activation=None)
+          (global): GraphConv(in=808, out=808, normalization=right, activation=None)
+        )
+      )
+      (dropout): Dropout(p=0.6, inplace=False)
+    )
+  )
+  (dropout): Dropout(p=0.6, inplace=False)
+  (predict): ModuleList(
+    (0): Sequential(
+      (0): Linear(in_features=15352, out_features=4848, bias=True)
+      (1): ReLU()
+      (2): Dropout(p=0.6, inplace=False)
+      (3): Linear(in_features=4848, out_features=97, bias=True)
+    )
+    (1): Sequential(
+      (0): Linear(in_features=15352, out_features=4848, bias=True)
+      (1): ReLU()
+      (2): Dropout(p=0.6, inplace=False)
+      (3): Linear(in_features=4848, out_features=97, bias=True)
+    )
+  )
+  (edge_layer): ModuleList(
+    (0): RelEdgeLayer(
+      (activation): ReLU()
+      (dropout): Dropout(p=0.6, inplace=False)
+      (mapping): Linear(in_features=1616, out_features=808, bias=True)
+    )
+    (1): RelEdgeLayer(
+      (activation): ReLU()
+      (dropout): Dropout(p=0.6, inplace=False)
+      (mapping): Linear(in_features=1616, out_features=808, bias=True)
+    )
+  )
+  (path_info_mapping): ModuleList(
+    (0): Linear(in_features=3232, out_features=3232, bias=True)
+    (1): Linear(in_features=3232, out_features=3232, bias=True)
+  )
+  (attention): ModuleList(
+    (0): Attention(
+      (W): Bilinear(in1_features=4848, in2_features=3232, out_features=1, bias=True)
+      (softmax): Softmax(dim=-1)
+    )
+    (1): Attention(
+      (W): Bilinear(in1_features=4848, in2_features=3232, out_features=1, bias=True)
+      (softmax): Softmax(dim=-1)
+    )
+  )
+)>
+total parameters: 324585108
+2021-08-23 06:08:05.557015 training from scratch with lr 0.001
+2021-08-23 06:08:14.790730 begin..
+/opt/conda/envs/GAIN/lib/python3.7/site-packages/dgl/base.py:45: DGLWarning: From v0.5, DGLHeteroGraph is merged into DGLGraph. You can safely replace dgl.batch_hetero with dgl.batch
+  return warnings.warn(message, category=category, stacklevel=1)
+/opt/conda/envs/GAIN/lib/python3.7/site-packages/dgl/base.py:45: DGLWarning: From v0.5, DGLHeteroGraph is merged into DGLGraph. You can safely replace dgl.unbatch_hetero with dgl.unbatch
+  return warnings.warn(message, category=category, stacklevel=1)
+/opt/conda/envs/GAIN/lib/python3.7/site-packages/torch/optim/lr_scheduler.py:154: UserWarning: The epoch parameter in `scheduler.step()` was not necessary and is being deprecated where possible. Please use `scheduler.step()` to step the scheduler. During the deprecation, if epoch is different from None, the closed form is used instead of the new chainable form, where available. Please open an issue if you are unable to replicate your use case: https://github.com/pytorch/pytorch/issues/new/choose.
+  warnings.warn(EPOCH_DEPRECATION_WARNING, UserWarning)
+2021-08-23 06:08:41.847456 | epoch  1 | step   20 |  ms/b 1352.83 | train loss 36.473 | NA acc: 0.96 | not NA acc: 0.00  | tot acc: 0.77 
+2021-08-23 06:09:06.443271 | epoch  1 | step   40 |  ms/b 1229.78 | train loss 10.333 | NA acc: 0.98 | not NA acc: 0.00  | tot acc: 0.79 

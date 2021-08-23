@@ -137,12 +137,12 @@ def train(opt):
                                 entity_graphs=d['entity_graphs'],
                                 ht_pair_distance=d['ht_pair_distance']
                                 )
-            
-            
+
+
 #             if len(predictions)>1:
 #                 loss = torch.sum(BCE(predictions[0], relation_multi_label) * relation_mask.unsqueeze(2)) / (
 #                         opt.relation_nums * torch.sum(relation_mask)) / len(predictions) * 0.3
-                
+
 #             else:
 #                 loss = torch.sum(BCE(predictions[0], relation_multi_label) * relation_mask.unsqueeze(2)) / (
 #                         opt.relation_nums * torch.sum(relation_mask)) / len(predictions)
